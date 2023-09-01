@@ -11,9 +11,10 @@ def get_birthdays_per_week(users):
         3: "Thursday",
         4: "Friday",
         5: "Saturday",
-        6: "Sunday"
+        6: "Sunday",
     }  # Словник з номерацією днів тижня та відповідними назвами днів
-    birthday_week = {day: [] for day in weekdays.values()}  # Створюємо словник для зберігання днів народження за днями тижня
+    birthday_week = {day: [] for day in
+                     weekdays.values()}  # Створюємо словник для зберігання днів народження за днями тижня
 
     for user in users:
         # Встановлюємо поточний рік для дня народження користувача
@@ -22,20 +23,11 @@ def get_birthdays_per_week(users):
             # Встановлюємо наступний рік
             birthday = birthday.replace(year=today.year + 1)
 
-        # Перевіряємо, чи день народження потрапляє у вікно наступного тижня
-        if today <= birthday <= next_week:
+        # Перевіряємо, чи день народження потрапляє у вікно наступного тижня і не впадає на вихідні
+        if today <= birthday <= next_week and birthday.weekday() < 5:  # 0-4 відповідають пн-пт (робочі дні)
             day_name = weekdays[birthday.weekday()]  # Отримуємо назву дня тижня для дня народження
-            birthday_week[day_name].append(user["name"])  # Додаємо ім'я користувача до списку імен відповідного дня тижня
-
-    # Враховуємо вихідні дні
-    if birthday_week["Saturday"]:
-        # Переносимо імена з суботи на понеділок
-        birthday_week["Monday"] += birthday_week["Saturday"]
-        del birthday_week["Saturday"]
-    if birthday_week["Sunday"]:
-        # Переносимо імена з неділі на понеділок
-        birthday_week["Monday"] += birthday_week["Sunday"]
-        del birthday_week["Sunday"]
+            birthday_week[day_name].append(
+                user["name"])  # Додаємо ім'я користувача до списку імен відповідного дня тижня
 
     return {day: names for day, names in birthday_week.items() if names}
 
@@ -45,7 +37,7 @@ users = [
     {"name": "Taras", "birthday": date(1990, 7, 21)},
     {"name": "Olenka", "birthday": date(1993, 1, 31)},
     {"name": "Artem", "birthday": date(2019, 1, 13)},
-    {"name": "Mark", "birthday": date(2022, 9, 29)},
+    {"name": "Mark", "birthday": date(2022, 9, 2)},
     {"name": "Vasil", "birthday": date(1963, 1, 13)},
     {"name": "Svitlana", "birthday": date(1964, 8, 19)},
 ]
